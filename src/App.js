@@ -1,14 +1,45 @@
 
 import './App.css';
 import React, {Component} from 'react';
+import axios from 'axios'
+
+const api = axios.create({
+  baseURL: '/'
+})
+
 
 class App extends Component {
+
+  state = {
+    customers: []
+  }
+
+  constructor(){
+    super();
+    api.get('/api/customers').then(res => {
+      console.log(res.data)
+      this.setState({ customers: res.data })
+    })
+  }
+
+  createCustomer = async () => {
+    let res = await api.post('/api/customers', {
+      name: "Test3",
+      phone: "09",
+      email: "test03@test.com",
+      username: "ni",
+      customer_password:"23"
+    })
+    console.log(res)
+  }
+
   render() {
     return (
     <>
       <header>
         <nav>
           <div class="rowh">
+             <img src="epicvedio.jpeg" alt="epic logo" class="logo"/>
             <ul class="main-nav">
                 <li><a href="#">Information </a></li>
                 <li><a href="#">Blog  </a></li>
@@ -32,11 +63,9 @@ class App extends Component {
                     <input name="Submit" type="hidden" value="registration"/>
                     <pre>
                       <label for="name"><span class="form-data" >First Name:</span> </label><br/>
-                      <input type="text" name="firstname" placeholder="" size="20" required/><br/>
-                      <label for="name"><span class="form-data" >Last Name:</span> </label><br/>
-                      <input type="text" name="lastname" placeholder="" size="20" required/><br/>
-                      <label for="mobile"><span class="form-data">Mobile Number:</span> </label><br/>
-                      <input type="Number" name="contactno" placeholder="" size="20" required/><br/>
+                      <input type="text" name="name" placeholder="" size="20" required/><br/>
+                     <label for="mobile"><span class="form-data">Mobile Number:</span> </label><br/>
+                      <input type="Number" name="phone" placeholder="" size="20" required/><br/>
                       <label for="Email"><span class="form-data">Email:</span> </label><br/>
                       <input type="Email" name="email" placeholder="" size="20" required/><br/>
                       <label for="Username"><span class="form-data">Username:</span> </label><br/>
@@ -44,7 +73,7 @@ class App extends Component {
                       <label for="password"><span class="form-data">Password:</span> </label><br/>
                       <input type="password" name="password" placeholder="" size="20" required/><br/>
                       
-                      <input type="submit" id="registration" value="Submit"/><input type="reset"/>
+                     
                     </pre>
                   </form>
                 </td> 
@@ -52,6 +81,12 @@ class App extends Component {
           </table>
         </div>
       </div>
+      <div>
+      <button onclick={this.createCustomer}>Create Customer</button>
+        {this.state.customers.map(customer => <h2 key={customer.id}> {customer.name}</h2>)}
+      </div>
+      
+     
       <footer class="footera">
         <nav class="footer-nav">    
           <a href="https://www.facebook.com/ATMCSOCIAL/" class="fa fa-facebook"></a>
