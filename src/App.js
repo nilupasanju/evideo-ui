@@ -1,6 +1,7 @@
 
 import './App.css';
 import React, {Component} from 'react';
+
 import axios from 'axios'
 
 const api = axios.create({
@@ -12,25 +13,26 @@ class App extends Component {
 
   state = {
     customers: []
-  }
+  };
 
   constructor(){
     super();
+    this.createCustomer = this.createCustomer.bind(this);
+    this.deleteCustomer = this.deleteCustomer.bind(this);
+
     api.get('/api/customers').then(res => {
       console.log(res.data)
       this.setState({ customers: res.data })
     })
   }
 
-  createCustomer = async () => {
-    let res = await api.post('/api/customers', {
-      name: "Test3",
-      phone: "09",
-      email: "test03@test.com",
-      username: "ni",
-      customer_password:"23"
-    })
+  createCustomer = async() => {
+    let res = await api.post('/api/customers', {name: "test2", email:"test2@test.com"})
     console.log(res)
+  }
+
+  deleteCustomer = async(id) => {
+    let data = await api.delete('api/customers/${id}')
   }
 
   render() {
@@ -72,8 +74,8 @@ class App extends Component {
                       <input type="text" name="username" placeholder="" size="20" required/><br/>
                       <label for="password"><span class="form-data">Password:</span> </label><br/>
                       <input type="password" name="password" placeholder="" size="20" required/><br/>
-                      
-                     
+                      <button onClick={this.createCustomer}>Create Customer</button>
+  
                     </pre>
                   </form>
                 </td> 
@@ -82,8 +84,10 @@ class App extends Component {
         </div>
       </div>
       <div>
-      <button onclick={this.createCustomer}>Create Customer</button>
-        {this.state.customers.map(customer => <h2 key={customer.id}> {customer.name}</h2>)}
+     
+      <p id="demo"></p>
+        {this.state.customers.map(customer => <h2 key={customer.id}> {customer.name}
+        <button onClick={() =>this.deleteCustomer(customer.id)}>x</button></h2>)}
       </div>
       
      
